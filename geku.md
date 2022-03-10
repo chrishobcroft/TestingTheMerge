@@ -4,7 +4,7 @@ Compiled with a lot of help from here: https://notes.ethereum.org/@launchpad/kil
 
 This guide has been tested as working on:
 
-- a clean install of Ubuntu 20.04.4.
+- a clean install of Ubuntu `20.04.4`, username: `ubuntu`
 
 Please submit a PR if you are able to get it working in other environments.
 
@@ -23,14 +23,30 @@ go version
 ## build tools
 
 ```
-sudo apt install -y make git gcc
+sudo apt install -y make git gcc default-jre
 ```
 
-## java
+# Make deposits
+
+## Generate keys
 
 ```
-sudo apt install default-jre
+wget https://github.com/ethereum/eth2.0-deposit-cli/releases/download/v2.0.0/staking_deposit-cli-e2a7c94-linux-amd64.tar.gz
+tar -xzf staking_deposit-cli-e2a7c94-linux-amd64.tar.gz
+cd staking_deposit-cli-e2a7c94-linux-amd64/
+./deposit new-mnemonic
 ```
+
+## Deposit
+
+- Connect your MetaMask to Kiln (see https://kiln.themerge.dev/ for more details)
+- Get >32 ETH from https://faucet.kiln.themerge.dev/
+- Go to https://explorer.kiln.themerge.dev/address/0x4242424242424242424242424242424242424242/write-contract
+- "Connect to MetaMask"
+- Extract data from the deposit-data-*.json created during `./deposit new-mnemonic`
+  - n.b. you need to ad `0x` in front of all hex data.
+  - Deposiy 32 ETH
+- Submit the transaction to make the deposit
 
 # Create sandbox
 
@@ -74,9 +90,26 @@ cd ..
 
 ## Geth (EL)
 
+### Initialize (first time)
+
 ```
-./go-ethereum/build/bin/geth init genesis.json  --datadir "geth-datadir"
-./go-ethereum/build/bin/geth --datadir "geth-datadir" --port 30304 --http --http.api="engine,eth,web3,net,debug" --http.corsdomain "*" --networkid=1337802 --syncmode=full --authrpc.jwtsecret=/tmp/jwtsecret --bootnodes "enode://c354db99124f0faf677ff0e75c3cbbd568b2febc186af664e0c51ac435609badedc67a18a63adb64dacc1780a28dcefebfc29b83fd1a3f4aa3c0eb161364cf94@164.92.130.5:30303,enode://d41af1662434cad0a88fe3c7c92375ec5719f4516ab6d8cb9695e0e2e815382c767038e72c224e04040885157da47422f756c040a9072676c6e35c5b1a383cce@138.68.66.103:30303,enode://91a745c3fb069f6b99cad10b75c463d527711b106b622756e9ef9f12d2631b6cb885f831d1c8731b9bc7177cae5e1ea1f1be087f86d7d30b590a91f22bc041b0@165.232.180.230:30303,enode://b74bd2e8a9f0c53f0c93bcce80818f2f19439fd807af5c7fbc3efb10130c6ee08be8f3aaec7dc0a057ad7b2a809c8f34dc62431e9b6954b07a6548cc59867884@164.92.140.200:30303" console
+./go-ethereum/build/bin/geth \
+       init genesis.json \
+       --datadir "geth-datadir"
+```
+
+### Run
+
+```
+./go-ethereum/build/bin/geth \
+       --datadir "geth-datadir" \
+       --port 30304 \
+       --http --http.api="engine,eth,web3,net,debug" \
+       --http.corsdomain "*" \
+       --networkid=1337802 \
+       --syncmode=full \
+       --authrpc.jwtsecret=/tmp/jwtsecret \
+       --bootnodes "enode://c354db99124f0faf677ff0e75c3cbbd568b2febc186af664e0c51ac435609badedc67a18a63adb64dacc1780a28dcefebfc29b83fd1a3f4aa3c0eb161364cf94@164.92.130.5:30303,enode://d41af1662434cad0a88fe3c7c92375ec5719f4516ab6d8cb9695e0e2e815382c767038e72c224e04040885157da47422f756c040a9072676c6e35c5b1a383cce@138.68.66.103:30303,enode://91a745c3fb069f6b99cad10b75c463d527711b106b622756e9ef9f12d2631b6cb885f831d1c8731b9bc7177cae5e1ea1f1be087f86d7d30b590a91f22bc041b0@165.232.180.230:30303,enode://b74bd2e8a9f0c53f0c93bcce80818f2f19439fd807af5c7fbc3efb10130c6ee08be8f3aaec7dc0a057ad7b2a809c8f34dc62431e9b6954b07a6548cc59867884@164.92.140.200:30303"
 ```
 
 ## teku (CL)
@@ -84,5 +117,14 @@ cd ..
 Open a new Terminal window.
 
 ```
-./teku/build/install/teku/bin/teku --data-path "datadir-teku" --network kiln --p2p-discovery-bootnodes "enr:-Iq4QMCTfIMXnow27baRUb35Q8iiFHSIDBJh6hQM5Axohhf4b6Kr_cOCu0htQ5WvVqKvFgY28893DHAg8gnBAXsAVqmGAX53x8JggmlkgnY0gmlwhLKAlv6Jc2VjcDI1NmsxoQK6S-Cii_KmfFdUJL2TANL3ksaKUnNXvTCv1tLwXs0QgIN1ZHCCIyk,enr:-Iq4QMCTfIMXnow27baRUb35Q8iiFHSIDBJh6hQM5Axohhf4b6Kr_cOCu0htQ5WvVqKvFgY28893DHAg8gnBAXsAVqmGAX53x8JggmlkgnY0gmlwhLKAlv6Jc2VjcDI1NmsxoQK6S-Cii_KmfFdUJL2TANL3ksaKUnNXvTCv1tLwXs0QgIN1ZHCCIyk,enr:-KG4QFkPJUFWuONp5grM94OJvNht9wX6N36sA4wqucm6Z02ECWBQRmh6AzndaLVGYBHWre67mjK-E0uKt2CIbWrsZ_8DhGV0aDKQc6pfXHAAAHAyAAAAAAAAAIJpZIJ2NIJpcISl6LTmiXNlY3AyNTZrMaEDHlSNOgYrNWP8_l_WXqDMRvjv6gUAvHKizfqDDVc8feaDdGNwgiMog3VkcIIjKA,enr:-MK4QI-wkVW1PxL4ksUM4H_hMgTTwxKMzvvDMfoiwPBuRxcsGkrGPLo4Kho3Ri1DEtJG4B6pjXddbzA9iF2gVctxv42GAX9v5WG5h2F0dG5ldHOIAAAAAAAAAACEZXRoMpBzql9ccAAAcDIAAAAAAAAAgmlkgnY0gmlwhKRcjMiJc2VjcDI1NmsxoQK1fc46pmVHKq8HNYLkSVaUv4uK2UBsGgjjGWU6AAhAY4hzeW5jbmV0cwCDdGNwgiMog3VkcIIjKA" --ee-endpoint http://localhost:8551 --Xee-version kilnv2 --ee-jwt-secret-file "/tmp/jwtsecret" --log-destination console
+./teku/build/install/teku/bin/teku \
+       --data-path "datadir-teku" \
+       --network kiln \
+       --ee-endpoint http://localhost:8551 \
+       --Xee-version kilnv2 \
+       --ee-jwt-secret-file "/tmp/jwtsecret" \
+       --log-destination console \
+       --validator-keys /home/ubuntu/merge-testnets/kiln/staking_deposit-cli-e2a7c94-linux-amd64/validator_keys:/home/ubuntu/merge-testnets/kiln/staking_deposit-cli-e2a7c94-linux-amd64/validator_keys \
+       --Xvalidators-proposer-default-fee-recipient 0xb1B9CCe8F0BCB9046A605E9612fB8D2A97Eea77a \
+       --p2p-discovery-bootnodes "enr:-Iq4QMCTfIMXnow27baRUb35Q8iiFHSIDBJh6hQM5Axohhf4b6Kr_cOCu0htQ5WvVqKvFgY28893DHAg8gnBAXsAVqmGAX53x8JggmlkgnY0gmlwhLKAlv6Jc2VjcDI1NmsxoQK6S-Cii_KmfFdUJL2TANL3ksaKUnNXvTCv1tLwXs0QgIN1ZHCCIyk,enr:-Iq4QMCTfIMXnow27baRUb35Q8iiFHSIDBJh6hQM5Axohhf4b6Kr_cOCu0htQ5WvVqKvFgY28893DHAg8gnBAXsAVqmGAX53x8JggmlkgnY0gmlwhLKAlv6Jc2VjcDI1NmsxoQK6S-Cii_KmfFdUJL2TANL3ksaKUnNXvTCv1tLwXs0QgIN1ZHCCIyk,enr:-KG4QFkPJUFWuONp5grM94OJvNht9wX6N36sA4wqucm6Z02ECWBQRmh6AzndaLVGYBHWre67mjK-E0uKt2CIbWrsZ_8DhGV0aDKQc6pfXHAAAHAyAAAAAAAAAIJpZIJ2NIJpcISl6LTmiXNlY3AyNTZrMaEDHlSNOgYrNWP8_l_WXqDMRvjv6gUAvHKizfqDDVc8feaDdGNwgiMog3VkcIIjKA,enr:-MK4QI-wkVW1PxL4ksUM4H_hMgTTwxKMzvvDMfoiwPBuRxcsGkrGPLo4Kho3Ri1DEtJG4B6pjXddbzA9iF2gVctxv42GAX9v5WG5h2F0dG5ldHOIAAAAAAAAAACEZXRoMpBzql9ccAAAcDIAAAAAAAAAgmlkgnY0gmlwhKRcjMiJc2VjcDI1NmsxoQK1fc46pmVHKq8HNYLkSVaUv4uK2UBsGgjjGWU6AAhAY4hzeW5jbmV0cwCDdGNwgiMog3VkcIIjKA"
 ```
