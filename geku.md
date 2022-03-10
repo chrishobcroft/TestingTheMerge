@@ -16,6 +16,10 @@ Please submit a PR if you are able to get it working in other environments.
 wget https://go.dev/dl/go1.17.8.linux-amd64.tar.gz
 sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.17.8.linux-amd64.tar.gz
 
+for raspberry pi running ubuntu instead do
+wget https://go.dev/dl/go1.17.8.linux-arm64.tar.gz
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.17.8.linux-arm64.tar.gz
+
 export PATH=$PATH:/usr/local/go/bin
 go version
 ```
@@ -33,6 +37,11 @@ sudo apt install -y make git gcc default-jre
 ```
 wget https://github.com/ethereum/eth2.0-deposit-cli/releases/download/v2.0.0/staking_deposit-cli-e2a7c94-linux-amd64.tar.gz
 tar -xzf staking_deposit-cli-e2a7c94-linux-amd64.tar.gz
+
+for raspberry pi running ubuntu do instead
+wget https://github.com/ethereum/eth2.0-deposit-cli/releases/download/v2.0.0/staking_deposit-cli-e2a7c94-linux-arm64.tar.gz
+tar -xzf staking_deposit-cli-e2a7c94-linux-arm64.tar.gz
+
 cd staking_deposit-cli-e2a7c94-linux-amd64/
 ./deposit new-mnemonic
 ```
@@ -45,7 +54,7 @@ cd staking_deposit-cli-e2a7c94-linux-amd64/
 - "Connect to MetaMask"
 - Extract data from the deposit-data-*.json created during `./deposit new-mnemonic`
   - n.b. you need to ad `0x` in front of all hex data.
-  - Deposiy 32 ETH
+  - Deposit 32 ETH
 - Submit the transaction to make the deposit
 
 # Create sandbox
