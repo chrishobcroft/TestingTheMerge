@@ -4,7 +4,9 @@ Compiled with a lot of help from here: https://notes.ethereum.org/@launchpad/kil
 
 This guide has been tested as working on:
 
-- a clean install of Ubuntu `20.04.4`, username: `ubuntu`
+- Ubuntu `20.04.4`
+  - username: `ubuntu`
+  - `amd64` and `arm64`
 
 Please submit a PR if you are able to get it working in other environments.
 
@@ -12,14 +14,18 @@ Please submit a PR if you are able to get it working in other environments.
 
 ## golang
 
+For `amd64`:
 ```
 wget https://go.dev/dl/go1.17.8.linux-amd64.tar.gz
 sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.17.8.linux-amd64.tar.gz
-
-for raspberry pi running ubuntu instead do
+```
+For `arm64` (Raspberry Pi):
+```
 wget https://go.dev/dl/go1.17.8.linux-arm64.tar.gz
 sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.17.8.linux-arm64.tar.gz
-
+```
+Then verify:
+```
 export PATH=$PATH:/usr/local/go/bin
 go version
 ```
@@ -34,14 +40,18 @@ sudo apt install -y make git gcc default-jre
 
 ## Generate keys
 
+For `amd64`: 
 ```
 wget https://github.com/ethereum/eth2.0-deposit-cli/releases/download/v2.0.0/staking_deposit-cli-e2a7c94-linux-amd64.tar.gz
 tar -xzf staking_deposit-cli-e2a7c94-linux-amd64.tar.gz
-
-for raspberry pi running ubuntu do instead
+```
+For `arm64` (Raspberry Pi):
+```
 wget https://github.com/ethereum/eth2.0-deposit-cli/releases/download/v2.0.0/staking_deposit-cli-e2a7c94-linux-arm64.tar.gz
 tar -xzf staking_deposit-cli-e2a7c94-linux-arm64.tar.gz
-
+```
+Then generate:
+```
 cd staking_deposit-cli-e2a7c94-linux-amd64/
 ./deposit new-mnemonic
 ```
