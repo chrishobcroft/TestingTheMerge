@@ -46,6 +46,8 @@ cd staking_deposit-cli-e2a7c94-linux-amd64/
 ./deposit new-mnemonic
 ```
 
+After the keystores have been generated, create `.txt` file(s) to correspond to each `.json` file, containing the password used during the `./deposit` process.
+
 ## Deposit
 
 - Connect your MetaMask to Kiln (see https://kiln.themerge.dev/ for more details)
