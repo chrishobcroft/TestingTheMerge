@@ -60,14 +60,14 @@ After the keystores have been generated, create `.txt` file(s) to correspond to 
 
 ## Deposit
 
+### Get testnet ETH
+
 - Connect your MetaMask to Kiln (see https://kiln.themerge.dev/ for more details)
 - Get >32 ETH from https://faucet.kiln.themerge.dev/
-- Go to https://explorer.kiln.themerge.dev/address/0x4242424242424242424242424242424242424242/write-contract
-- "Connect to MetaMask"
-- Extract data from the deposit-data-*.json created during `./deposit new-mnemonic`
-  - n.b. you need to ad `0x` in front of all hex data.
-  - Deposit 32 ETH
-- Submit the transaction to make the deposit
+
+### Make deposit
+
+Go to https://kiln.launchpad.ethereum.org/en/ and click "Become a Validator" - then follow the process.
 
 # Create sandbox
 
