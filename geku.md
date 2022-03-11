@@ -124,7 +124,6 @@ cd ..
 ```
 ./go-ethereum/build/bin/geth \
        --datadir "geth-datadir" \
-       --port 30304 \
        --http --http.api="engine,eth,web3,net,debug" \
        --http.corsdomain "*" \
        --networkid=1337802 \
