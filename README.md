@@ -1,2 +1,5 @@
 # TestingTheMerge
-Repo containing notes for testing the merge.
+
+Minimalist guide to setting up environment:
+
+- [Geth + Teku ("geku")](geku.md)
