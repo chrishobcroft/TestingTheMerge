@@ -44,15 +44,16 @@ For `amd64`:
 ```
 wget https://github.com/ethereum/eth2.0-deposit-cli/releases/download/v2.0.0/staking_deposit-cli-e2a7c94-linux-amd64.tar.gz
 tar -xzf staking_deposit-cli-e2a7c94-linux-amd64.tar.gz
+cd staking_deposit-cli-e2a7c94-linux-amd64/
 ```
 For `arm64` (Raspberry Pi):
 ```
 wget https://github.com/ethereum/eth2.0-deposit-cli/releases/download/v2.0.0/staking_deposit-cli-e2a7c94-linux-arm64.tar.gz
 tar -xzf staking_deposit-cli-e2a7c94-linux-arm64.tar.gz
+cd staking_deposit-cli-e2a7c94-linux-arm64/
 ```
 Then generate:
 ```
-cd staking_deposit-cli-e2a7c94-linux-amd64/
 ./deposit new-mnemonic
 ```
 
