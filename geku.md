@@ -28,7 +28,7 @@ wget https://github.com/ethereum/staking-deposit-cli/releases/download/v2.1.0/st
 tar -xzf staking_deposit-cli-ce8cbb6-linux-arm64.tar.gz
 cd staking_deposit-cli-ce8cbb6-linux-arm64/
 ```
-## Generate keys
+## Generate Validator key(s)
 
 Generate keys using the following:
 ```
@@ -41,18 +41,18 @@ It might be easiest to start with one, in order to get up and running with a sin
 
 You can run this process again later with more keys.
 
-## Generate password files
+## Generate password file(s)
 
 After the keystores have been generated, you need to create `.txt` file(s) to correspond to each `.json` file, containing the password used during the `./deposit` process.
 
 So, for example, if you have a keystore file called `keystore-m_12381_3600_0_0_0-1649415819.json`, you will need to create a password file called `keystore-m_12381_3600_0_0_0-1649415819.txt` which contains the password for the keystore.
 
-Then move the `validator_keys` folder to home `~`:
+Then move the `validator_keys` folder to home:
 ```
-mv validator_keys ~
+mv validator_keys /home/ubuntu
 ```
 
-## generate a local JWT
+## Generate a local JWT
 
 Run this command to generate a token for teku and Geth to use to securely communicate with each other:
 
@@ -60,13 +60,13 @@ Run this command to generate a token for teku and Geth to use to securely commun
 openssl rand -hex 32 | tr -d "\n" > "/tmp/jwtsecret"
 ```
 
+# Install pre-requisites
+
+```
+sudo apt install -y git default-jre make gcc
+```
+
 # teku (Consensus Layer / CL)
-
-## Instal pre-requisites
-
-```
-sudo apt install -y git default-jre
-```
 
 ## Build teku
 
@@ -103,12 +103,6 @@ This will start to sync the Kiln Consensus Layer chainstate, by peering with oth
 Meanwhile, you can open a new Terminal tab, and continue with the process.
 
 ## Geth (Execution Layer / EL)
-
-## Instal pre-requisites
-
-```
-sudo apt install -y make gcc
-```
 
 ### install golang
 
@@ -152,7 +146,7 @@ cd ~
 
 This will start to sync the Kiln Execution Layer chainstate, by peering with other nodes on the network.
 
-> Note: the process of syncing will pause at the point when the Kiln merge occurred. It will begin again when the Consensus Layer client (see below) also syncs to this point. When this happened, it will continue syncing.
+> Note: the process of syncing will pause at the point when the Kiln merge occurred. It will begin again when the Consensus Layer client (see above) also syncs to this point. When this happened, it will continue syncing.
 
 # Deposit
 
