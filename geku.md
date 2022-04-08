@@ -10,9 +10,107 @@ This guide has been tested as working on:
 
 Please submit a PR if you are able to get it working in other environments.
 
-# Install pre-requisites:
+# Generate keys
 
-## golang
+## Download software
+
+For `amd64`: 
+```
+cd ~
+wget https://github.com/ethereum/staking-deposit-cli/releases/download/v2.1.0/staking_deposit-cli-ce8cbb6-linux-amd64.tar.gz
+tar -xzf staking_deposit-cli-ce8cbb6-linux-amd64.tar.gz
+cd staking_deposit-cli-ce8cbb6-linux-amd64/
+```
+For `arm64` (Raspberry Pi):
+```
+cd ~
+wget https://github.com/ethereum/staking-deposit-cli/releases/download/v2.1.0/staking_deposit-cli-ce8cbb6-linux-arm64.tar.gz
+tar -xzf staking_deposit-cli-ce8cbb6-linux-arm64.tar.gz
+cd staking_deposit-cli-ce8cbb6-linux-arm64/
+```
+## Generate keys
+
+Generate keys using the following:
+```
+./deposit new-mnemonic
+```
+
+You can choose to generate as many Validators as you like.
+
+It might be easiest to start with one, in order to get up and running with a single 32 goETH deposit.
+
+You can run this process again later with more keys.
+
+## Generate password files
+
+After the keystores have been generated, you need to create `.txt` file(s) to correspond to each `.json` file, containing the password used during the `./deposit` process.
+
+So, for example, if you have a keystore file called `keystore-m_12381_3600_0_0_0-1649415819.json`, you will need to create a password file called `keystore-m_12381_3600_0_0_0-1649415819.txt` which contains the password for the keystore.
+
+Then move the `validator_keys` folder to home `~`:
+```
+mv validator_keys ~
+```
+
+## generate a local JWT
+
+Run this command to generate a token for teku and Geth to use to securely communicate with each other:
+
+```
+openssl rand -hex 32 | tr -d "\n" > "/tmp/jwtsecret"
+```
+
+# teku (Consensus Layer / CL)
+
+## Instal pre-requisites
+
+```
+sudo apt install -y git default-jre
+```
+
+## Build teku
+
+```
+cd ~
+git clone https://github.com/ConsenSys/teku.git
+cd teku
+./gradlew installDist
+```
+
+## Run teku
+
+Open a new Terminal window.
+
+```
+cd ~
+./teku/build/install/teku/bin/teku \
+       --data-path "datadir-teku" \
+       --network kiln \
+       --ee-endpoint http://localhost:8551 \
+       --Xee-version kilnv2 \
+       --ee-jwt-secret-file "/tmp/jwtsecret" \
+       --log-destination console \
+       --validator-keys /home/ubuntu/validator_keys:/home/ubuntu/validator_keys \
+       --validators-proposer-default-fee-recipient 0xb1B9CCe8F0BCB9046A605E9612fB8D2A97Eea77a \
+       --Xnetwork-total-terminal-difficulty-override=20000000000000 \
+       --p2p-discovery-bootnodes "enr:-Iq4QMCTfIMXnow27baRUb35Q8iiFHSIDBJh6hQM5Axohhf4b6Kr_cOCu0htQ5WvVqKvFgY28893DHAg8gnBAXsAVqmGAX53x8JggmlkgnY0gmlwhLKAlv6Jc2VjcDI1NmsxoQK6S-Cii_KmfFdUJL2TANL3ksaKUnNXvTCv1tLwXs0QgIN1ZHCCIyk,enr:-Iq4QMCTfIMXnow27baRUb35Q8iiFHSIDBJh6hQM5Axohhf4b6Kr_cOCu0htQ5WvVqKvFgY28893DHAg8gnBAXsAVqmGAX53x8JggmlkgnY0gmlwhLKAlv6Jc2VjcDI1NmsxoQK6S-Cii_KmfFdUJL2TANL3ksaKUnNXvTCv1tLwXs0QgIN1ZHCCIyk,enr:-KG4QFkPJUFWuONp5grM94OJvNht9wX6N36sA4wqucm6Z02ECWBQRmh6AzndaLVGYBHWre67mjK-E0uKt2CIbWrsZ_8DhGV0aDKQc6pfXHAAAHAyAAAAAAAAAIJpZIJ2NIJpcISl6LTmiXNlY3AyNTZrMaEDHlSNOgYrNWP8_l_WXqDMRvjv6gUAvHKizfqDDVc8feaDdGNwgiMog3VkcIIjKA,enr:-MK4QI-wkVW1PxL4ksUM4H_hMgTTwxKMzvvDMfoiwPBuRxcsGkrGPLo4Kho3Ri1DEtJG4B6pjXddbzA9iF2gVctxv42GAX9v5WG5h2F0dG5ldHOIAAAAAAAAAACEZXRoMpBzql9ccAAAcDIAAAAAAAAAgmlkgnY0gmlwhKRcjMiJc2VjcDI1NmsxoQK1fc46pmVHKq8HNYLkSVaUv4uK2UBsGgjjGWU6AAhAY4hzeW5jbmV0cwCDdGNwgiMog3VkcIIjKA"
+```
+
+> Note: you can replace the address passed in to `--validators-proposer-default-fee-recipient`, in order to receive any block proposer fees to your own address, instead of the author's ;)
+
+This will start to sync the Kiln Consensus Layer chainstate, by peering with other nodes on the network. This may take several hours to complete.
+
+Meanwhile, you can open a new Terminal tab, and continue with the process.
+
+## Geth (Execution Layer / EL)
+
+## Instal pre-requisites
+
+```
+sudo apt install -y make gcc
+```
+
+### install golang
 
 For `amd64`:
 ```
@@ -30,58 +128,7 @@ export PATH=$PATH:/usr/local/go/bin
 go version
 ```
 
-## build tools
-
-```
-sudo apt install -y make git gcc default-jre
-```
-
-# Make deposits
-
-## Generate keys
-
-For `amd64`: 
-```
-wget https://github.com/ethereum/staking-deposit-cli/releases/download/v2.1.0/staking_deposit-cli-ce8cbb6-linux-amd64.tar.gz
-tar -xzf staking_deposit-cli-ce8cbb6-linux-amd64.tar.gz
-cd staking_deposit-cli-ce8cbb6-linux-amd64/
-```
-For `arm64` (Raspberry Pi):
-```
-wget https://github.com/ethereum/staking-deposit-cli/releases/download/v2.1.0/staking_deposit-cli-ce8cbb6-linux-arm64.tar.gz
-tar -xzf staking_deposit-cli-ce8cbb6-linux-arm64.tar.gz
-cd staking_deposit-cli-ce8cbb6-linux-arm64/
-```
-Then generate:
-```
-./deposit new-mnemonic
-```
-
-## Generate password files
-
-After the keystores have been generated, you need to create `.txt` file(s) to correspond to each `.json` file, containing the password used during the `./deposit` process.
-
-So, for example, if you have a keystore file called `keystore-m_12381_3600_0_0_0-1649415819.json`, you will need to create a password file called `keystore-m_12381_3600_0_0_0-1649415819.txt` which contains the password for the keystore.
-
-Then move the `validator_keys` folder to home `~`:
-```
-mv validator_keys ~
-```
-
-## Deposit
-
-### Get testnet ETH
-
-- Connect your MetaMask to Kiln (see https://kiln.themerge.dev/ for more details)
-- Get >32 ETH from https://faucet.kiln.themerge.dev/
-
-### Make deposit
-
-Go to https://kiln.launchpad.ethereum.org/en/ and click "Become a Validator" - then follow the process.
-
-# Build clients
-
-## Geth (Execution Layer / EL)
+### Make Geth
 
 ```
 cd ~
@@ -89,34 +136,12 @@ git clone https://github.com/ethereum/go-ethereum.git
 cd go-ethereum 
 export PATH=$PATH:/usr/local/go/bin
 make geth
-
-cd ..
 ```
 
-## teku (Consensus Layer / CL)
+## Run Geth
 
 ```
 cd ~
-git clone https://github.com/ConsenSys/teku.git
-cd teku
-./gradlew installDist
-
-cd ..
-```
-
-# Run
-
-## generate a token
-
-```
-openssl rand -hex 32 | tr -d "\n" > "/tmp/jwtsecret"
-```
-
-## Geth (EL)
-
-### Run
-
-```
 ./go-ethereum/build/bin/geth \
        --kiln \
        --datadir "geth-datadir" \
@@ -125,20 +150,23 @@ openssl rand -hex 32 | tr -d "\n" > "/tmp/jwtsecret"
        --authrpc.jwtsecret=/tmp/jwtsecret
 ```
 
-## teku (CL)
+This will start to sync the Kiln Execution Layer chainstate, by peering with other nodes on the network.
 
-Open a new Terminal window.
+> Note: the process of syncing will pause at the point when the Kiln merge occurred. It will begin again when the Consensus Layer client (see below) also syncs to this point. When this happened, it will continue syncing.
 
-```
-./teku/build/install/teku/bin/teku \
-       --data-path "datadir-teku" \
-       --network kiln \
-       --ee-endpoint http://localhost:8551 \
-       --Xee-version kilnv2 \
-       --ee-jwt-secret-file "/tmp/jwtsecret" \
-       --log-destination console \
-       --validator-keys /home/ubuntu/validator_keys:/home/ubuntu/validator_keys \
-       --validators-proposer-default-fee-recipient 0xb1B9CCe8F0BCB9046A605E9612fB8D2A97Eea77a \
-       --Xnetwork-total-terminal-difficulty-override=20000000000000 \
-       --p2p-discovery-bootnodes "enr:-Iq4QMCTfIMXnow27baRUb35Q8iiFHSIDBJh6hQM5Axohhf4b6Kr_cOCu0htQ5WvVqKvFgY28893DHAg8gnBAXsAVqmGAX53x8JggmlkgnY0gmlwhLKAlv6Jc2VjcDI1NmsxoQK6S-Cii_KmfFdUJL2TANL3ksaKUnNXvTCv1tLwXs0QgIN1ZHCCIyk,enr:-Iq4QMCTfIMXnow27baRUb35Q8iiFHSIDBJh6hQM5Axohhf4b6Kr_cOCu0htQ5WvVqKvFgY28893DHAg8gnBAXsAVqmGAX53x8JggmlkgnY0gmlwhLKAlv6Jc2VjcDI1NmsxoQK6S-Cii_KmfFdUJL2TANL3ksaKUnNXvTCv1tLwXs0QgIN1ZHCCIyk,enr:-KG4QFkPJUFWuONp5grM94OJvNht9wX6N36sA4wqucm6Z02ECWBQRmh6AzndaLVGYBHWre67mjK-E0uKt2CIbWrsZ_8DhGV0aDKQc6pfXHAAAHAyAAAAAAAAAIJpZIJ2NIJpcISl6LTmiXNlY3AyNTZrMaEDHlSNOgYrNWP8_l_WXqDMRvjv6gUAvHKizfqDDVc8feaDdGNwgiMog3VkcIIjKA,enr:-MK4QI-wkVW1PxL4ksUM4H_hMgTTwxKMzvvDMfoiwPBuRxcsGkrGPLo4Kho3Ri1DEtJG4B6pjXddbzA9iF2gVctxv42GAX9v5WG5h2F0dG5ldHOIAAAAAAAAAACEZXRoMpBzql9ccAAAcDIAAAAAAAAAgmlkgnY0gmlwhKRcjMiJc2VjcDI1NmsxoQK1fc46pmVHKq8HNYLkSVaUv4uK2UBsGgjjGWU6AAhAY4hzeW5jbmV0cwCDdGNwgiMog3VkcIIjKA"
-```
+# Deposit
+
+As you wait for the clients to sync, you can make the deposit to the staking contract.
+
+This can take up to 24 hours to be processed, depending on how long the queue is.
+
+## Get testnet ETH
+
+- Connect your MetaMask to Kiln (see https://kiln.themerge.dev/ for more details)
+- Get >32 ETH from https://faucet.kiln.themerge.dev/
+
+### Make deposit
+
+Go to https://kiln.launchpad.ethereum.org/en/ and click "Become a Validator" - then follow the process.
+
+You will find the `deposit_data-**********.json` file in the `~/validator_keys` folder.
