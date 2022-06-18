@@ -1,3 +1,7 @@
+Date: 2022-06-16
+Time: 1
+Where: meet.ethereum.org/Holešovice
+
 Notes and actions from this call:
 
 - Establish compatibility of existing wallets, contracts, factories, faucets, protocols, explorers etc. with Verklised-EL. Anyone can run local version from https://github.com/holesovice-testnet/go-ethereum, test their favourite infrastructure (please report bugs as issues in the projects' repos, e.g. tell projects that their stuff has/hasn't been demonstrated to work with Verkle Trees). Through this, we can hopefully also refine the installation instructions to help @matlemad get up and running with his RPi.
