@@ -1,6 +1,8 @@
 Date: 2022-06-16
-Time: 1
+Time: 1500 (HT - Holešovice Time)
 Where: meet.ethereum.org/Holešovice
+
+Some context is required from this post: 
 
 Notes and actions from this call:
 
