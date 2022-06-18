@@ -3,6 +3,8 @@ Time: 1500 (HT - Holešovice Time)
 Where: meet.ethereum.org/Holešovice
 
 Some context is required from this post: 
+[Holešovice Project submission](https://devpost.com/software/holesovice-testnet)
+ (winner of Sustainability prize at EthPrague 2022)
 
 Notes and actions from this call:
 
