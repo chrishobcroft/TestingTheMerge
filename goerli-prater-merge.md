@@ -136,7 +136,7 @@ This can take up to 24 hours to be processed, depending on how long the queue is
 
 ## Get testnet ETH
 
-I don't know yet how to get ETH on Goerli. I will update this when I find out.
+Ask your friends, and if they don't have any, ask me, and I will try to find out.
 
 ## Make deposit
 
@@ -153,3 +153,9 @@ If you would like to expedite the process of syncing chianstate for teku, you ca
 ```
 --initial-state=https://1y5d...mkzQ:e0b1...0a6f@eth2-beacon-prater.infura.io/eth/v2/debug/beacon/states/finalized
 ```
+
+## Tornado Cash
+
+Consider learning how Tornado Cash works in the process, to protect your privacy as a Validator.
+
+It's available on Goerli: https://tornadocash.eth.limo/
