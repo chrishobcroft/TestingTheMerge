@@ -76,6 +76,7 @@ Open a new Terminal window.
 cd ~
 ./teku/build/install/teku/bin/teku \
        --network prater \
+       --data-path "datadir-teku" \
        --ee-endpoint http://localhost:8551 \
        --ee-jwt-secret-file "/tmp/jwtsecret" \
        --validator-keys /home/ubuntu/validator_keys:/home/ubuntu/validator_keys \
@@ -118,12 +119,13 @@ make geth
 cd ~
 ./go-ethereum/build/bin/geth \
        --goerli \
+       --data-path "datadir-geth" \
        --http --http.api="engine,eth,web3,net,debug" \
        --http.corsdomain "*" \
        --authrpc.jwtsecret=/tmp/jwtsecret
 ```
 
-This will start to sync the Kiln Execution Layer chainstate, by peering with other nodes on the network.
+This will start to sync the Prater Execution Layer chainstate, by peering with other nodes on the network.
 
 # Deposit
 
@@ -137,6 +139,16 @@ I don't know yet how to get ETH on Goerli. I will update this when I find out.
 
 ## Make deposit
 
-Go to https://kiln.launchpad.ethereum.org/en/ and click "Become a Validator" - then follow the process.
+Go to https://prater.launchpad.ethereum.org/ and click "Become a Validator" - then follow the process.
 
 You will find the `deposit_data-**********.json` file in the `~/validator_keys` folder.
+
+# Advanced Features
+
+## teku checkpoint sync
+
+If you would like to expedite the process of syncing chianstate for teku, you can use checkpoint sync. For this, you will need an "ETH2" project on infura, and an endpoint on the Prater network. Add the following, but remember to use your own endpoint instead of mine:
+
+```
+--initial-state=https://1y5d...mkzQ:e0b1...0a6f@eth2-beacon-prater.infura.io/eth/v2/debug/beacon/states/finalized
+```
