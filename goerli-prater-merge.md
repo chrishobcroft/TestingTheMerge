@@ -119,7 +119,8 @@ make geth
 cd ~
 ./go-ethereum/build/bin/geth \
        --goerli \
-       --data-path "datadir-geth" \
+       --override.terminaltotaldifficulty 10790000 \
+       --datadir "datadir-geth" \
        --http --http.api="engine,eth,web3,net,debug" \
        --http.corsdomain "*" \
        --authrpc.jwtsecret=/tmp/jwtsecret
