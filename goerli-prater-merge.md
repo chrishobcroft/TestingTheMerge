@@ -4,19 +4,27 @@ This guide has been tested as working on:
 
 - Ubuntu `20.04 LTS`
   - username: `ubuntu`
-  - `amd64`
+  - `amd64`, `arm64`
 
-Please submit a PR if you are able to get it working in other architectures.
+Please submit a PR if you are able to get it working in other environments.
 
 # Generate keys
 
 ## Download software
 
+For `amd64`:
 ```
 cd ~
-wget https://github.com/ethereum/staking-deposit-cli/releases/download/v2.1.0/staking_deposit-cli-ce8cbb6-linux-amd64.tar.gz
-tar -xzf staking_deposit-cli-ce8cbb6-linux-amd64.tar.gz
-cd staking_deposit-cli-ce8cbb6-linux-amd64/
+wget https://github.com/ethereum/staking-deposit-cli/releases/download/v2.2.0/staking_deposit-cli-9ab0b05-linux-amd64.tar.gz
+tar -xzf staking_deposit-cli-9ab0b05-linux-amd64.tar.gz
+cd staking_deposit-cli-9ab0b05-linux-amd64/
+```
+For `arm64`:
+```
+cd ~
+wget https://github.com/ethereum/staking-deposit-cli/releases/download/v2.2.0/staking_deposit-cli-9ab0b05-linux-arm64.tar.gz
+tar -xzf staking_deposit-cli-9ab0b05-linux-arm64.tar.gz
+cd staking_deposit-cli-9ab0b05-linux-arm64/
 ```
 
 ## Generate Validator key(s)
@@ -76,7 +84,6 @@ Open a new Terminal window.
 cd ~
 ./teku/build/install/teku/bin/teku \
        --network prater \
-       --data-path "datadir-teku" \
        --ee-endpoint http://localhost:8551 \
        --ee-jwt-secret-file "/tmp/jwtsecret" \
        --validator-keys /home/ubuntu/validator_keys:/home/ubuntu/validator_keys \
@@ -93,10 +100,19 @@ Meanwhile, you can open a new Terminal tab, and continue with the process.
 
 ### install golang
 
+For `amd64`:
 ```
+cd ~
 wget https://go.dev/dl/go1.18.4.linux-amd64.tar.gz
 sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.18.4.linux-amd64.tar.gz
 ```
+For `arm64`:
+```
+cd ~
+wget https://go.dev/dl/go1.18.4.linux-arm64.tar.gz
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.18.4.linux-arm64.tar.gz
+```
+
 Then verify:
 ```
 export PATH=$PATH:/usr/local/go/bin
@@ -120,19 +136,14 @@ cd ~
 ./go-ethereum/build/bin/geth \
        --goerli \
        --override.terminaltotaldifficulty 10790000 \
-       --datadir "datadir-geth" \
-       --http --http.api="engine,eth,web3,net,debug" \
-       --http.corsdomain "*" \
        --authrpc.jwtsecret=/tmp/jwtsecret
 ```
 
-This will start to sync the Prater Execution Layer chainstate, by peering with other nodes on the network.
+This will start to sync the Goerli "Execution Layer" chainstate, by peering with other nodes on the network.
 
 # Deposit
 
-As you wait for the clients to sync, you can make the deposit to the staking contract.
-
-This can take up to 24 hours to be processed, depending on how long the queue is.
+As you wait for the clients to sync, you can make the deposit to the staking contract. This can take up to 24 hours to be processed, depending on the length of the queue.
 
 ## Get testnet ETH
 
@@ -154,8 +165,62 @@ If you would like to expedite the process of syncing chianstate for teku, you ca
 --initial-state=https://1y5d...mkzQ:e0b1...0a6f@eth2-beacon-prater.infura.io/eth/v2/debug/beacon/states/finalized
 ```
 
-## Tornado Cash
+## systemd
 
-Consider learning how Tornado Cash works in the process, to protect your privacy as a Validator.
+This section explains how to configured for the clients to launch when the system starts up.
 
-It's available on Goerli: https://tornadocash.eth.limo/
+### Geth
+
+Open a new file using `nano`
+```
+sudo nano /etc/systemd/system/geth.service
+```
+Paste this into the file (in Terminal, paste is `Ctrl-Shift-V`, or right-click and Paste):
+```
+[Unit]
+Description=geth on Goerli
+
+[Service]
+Type=simple
+ExecStart=/home/ubuntu/go-ethereum/build/bin/geth --goerli --override.terminaltotaldifficulty 10790000 --authrpc.jwtsecret=/tmp/jwtsecret
+
+[Install]
+WantedBy=multi-user.target
+```
+Refresh the services, and start geth service:
+```
+sudo systemctl daemon-reload
+sudo systemctl start geth.service
+```
+Verify operation:
+```
+sudo journalctl -fu geth.service
+```
+
+### teku
+
+Open a new file using `nano`
+```
+sudo nano /etc/systemd/system/teku.service
+```
+Paste this into the file (in Terminal, paste is `Ctrl-Shift-V`, or right-click and Paste):
+```
+[Unit]
+Description=teku on Prater
+
+[Service]
+Type=simple
+ExecStart=/home/ubuntu/teku/build/install/teku/bin/teku --network prater --ee-endpoint http://localhost:8551 --ee-jwt-secret-file "/tmp/jwtsecret" --validator-keys /home/ubuntu/validator_keys:/home/ubuntu/validator_keys --validators-proposer-default-fee-recipient 0x19ca95B64D52CcF91408B63B042182223C8C2f1c
+
+[Install]
+WantedBy=multi-user.target
+```
+Refresh the services, and start teku service:
+```
+sudo systemctl daemon-reload
+sudo systemctl start teku.service
+```
+Verify operation:
+```
+sudo journalctl -fu teku.service
+```
