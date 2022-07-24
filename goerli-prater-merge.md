@@ -179,17 +179,23 @@ Paste this into the file (in Terminal, paste is `Ctrl-Shift-V`, or right-click a
 ```
 [Unit]
 Description=geth on Goerli
+After=network.target
 
 [Service]
+User=ubuntu
 Type=simple
+Restart=always
+RestartSec=1s
+WorkingDirectory=/home/ubuntu/
 ExecStart=/home/ubuntu/go-ethereum/build/bin/geth --goerli --override.terminaltotaldifficulty 10790000 --authrpc.jwtsecret=/tmp/jwtsecret
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 ```
 Refresh the services, and start geth service:
 ```
 sudo systemctl daemon-reload
+sudo systemctl enable geth.service
 sudo systemctl start geth.service
 ```
 Verify operation:
@@ -207,17 +213,23 @@ Paste this into the file (in Terminal, paste is `Ctrl-Shift-V`, or right-click a
 ```
 [Unit]
 Description=teku on Prater
+After=network.target
 
 [Service]
+User=ubuntu
 Type=simple
+Restart=always
+RestartSec=1s
+WorkingDirectory=/home/ubuntu/
 ExecStart=/home/ubuntu/teku/build/install/teku/bin/teku --network prater --ee-endpoint http://localhost:8551 --ee-jwt-secret-file "/tmp/jwtsecret" --validator-keys /home/ubuntu/validator_keys:/home/ubuntu/validator_keys --validators-proposer-default-fee-recipient 0x19ca95B64D52CcF91408B63B042182223C8C2f1c
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 ```
 Refresh the services, and start teku service:
 ```
 sudo systemctl daemon-reload
+sudo systemctl enable teku.service
 sudo systemctl start teku.service
 ```
 Verify operation:
