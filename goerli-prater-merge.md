@@ -88,6 +88,7 @@ cd ~
        --ee-jwt-secret-file "/tmp/jwtsecret" \
        --validator-keys /home/ubuntu/validator_keys:/home/ubuntu/validator_keys \
        --validators-proposer-default-fee-recipient 0x19ca95B64D52CcF91408B63B042182223C8C2f1c
+       --rest-api-enabled=true \
 ```
 
 > Note: you can replace the address passed in to `--validators-proposer-default-fee-recipient`, in order to receive any block proposer fees to your own address, instead of the author's ;)
@@ -155,6 +156,14 @@ Go to https://prater.launchpad.ethereum.org/ and click "Become a Validator" - th
 
 You will find the `deposit_data-**********.json` file in the `~/validator_keys` folder.
 
+# Voluntary Exit
+
+To volunteer to exit your validator, run the following command, and follow the instructions:
+```
+/home/ubuntu/teku/build/install/teku/bin/teku voluntary-exit --beacon-node-api-endpoint=http://127.0.0.1:5051 --validator-keys /home/ubuntu/validator_keys:/home/ubuntu/validator_keys
+```
+Note: teku must be running as specified above in order for this command to succeed.
+
 # Advanced Features
 
 ## teku checkpoint sync
@@ -221,7 +230,7 @@ Type=simple
 Restart=always
 RestartSec=1s
 WorkingDirectory=/home/ubuntu/
-ExecStart=/home/ubuntu/teku/build/install/teku/bin/teku --network prater --ee-endpoint http://localhost:8551 --ee-jwt-secret-file "/tmp/jwtsecret" --validator-keys /home/ubuntu/validator_keys:/home/ubuntu/validator_keys --validators-proposer-default-fee-recipient 0x19ca95B64D52CcF91408B63B042182223C8C2f1c
+ExecStart=/home/ubuntu/teku/build/install/teku/bin/teku --network prater --ee-endpoint http://localhost:8551 --ee-jwt-secret-file "/tmp/jwtsecret" --validator-keys /home/ubuntu/validator_keys:/home/ubuntu/validator_keys --validators-proposer-default-fee-recipient 0x19ca95B64D52CcF91408B63B042182223C8C2f1c --rest-api-enabled=true
 
 [Install]
 WantedBy=default.target
