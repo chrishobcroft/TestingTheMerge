@@ -136,7 +136,6 @@ make geth
 cd ~
 ./go-ethereum/build/bin/geth \
        --goerli \
-       --override.terminaltotaldifficulty 10790000 \
        --authrpc.jwtsecret=/tmp/jwtsecret
 ```
 
@@ -196,7 +195,7 @@ Type=simple
 Restart=always
 RestartSec=1s
 WorkingDirectory=/home/ubuntu/
-ExecStart=/home/ubuntu/go-ethereum/build/bin/geth --goerli --override.terminaltotaldifficulty 10790000 --authrpc.jwtsecret=/tmp/jwtsecret
+ExecStart=/home/ubuntu/go-ethereum/build/bin/geth --goerli --authrpc.jwtsecret=/tmp/jwtsecret
 
 [Install]
 WantedBy=default.target
