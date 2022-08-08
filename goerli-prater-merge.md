@@ -87,8 +87,8 @@ cd ~
        --ee-endpoint http://localhost:8551 \
        --ee-jwt-secret-file "/tmp/jwtsecret" \
        --validator-keys /home/ubuntu/validator_keys:/home/ubuntu/validator_keys \
-       --validators-proposer-default-fee-recipient 0x19ca95B64D52CcF91408B63B042182223C8C2f1c
-       --rest-api-enabled=true \
+       --validators-proposer-default-fee-recipient 0x19ca95B64D52CcF91408B63B042182223C8C2f1c \
+       --rest-api-enabled=true
 ```
 
 > Note: you can replace the address passed in to `--validators-proposer-default-fee-recipient`, in order to receive any block proposer fees to your own address, instead of the author's ;)
