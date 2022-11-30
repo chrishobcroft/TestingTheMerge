@@ -15,16 +15,16 @@ Please submit a PR if you are able to get it working in other environments.
 For `amd64`:
 ```
 cd ~
-wget https://github.com/ethereum/staking-deposit-cli/releases/download/v2.2.0/staking_deposit-cli-9ab0b05-linux-amd64.tar.gz
-tar -xzf staking_deposit-cli-9ab0b05-linux-amd64.tar.gz
-cd staking_deposit-cli-9ab0b05-linux-amd64/
+wget https://github.com/ethereum/staking-deposit-cli/releases/download/v2.3.0/staking_deposit-cli-76ed782-linux-amd64.tar.gz
+tar -xzf staking_deposit-cli-76ed782-linux-amd64.tar.gz
+cd staking_deposit-cli-76ed782-linux-amd64/
 ```
 For `arm64`:
 ```
 cd ~
-wget https://github.com/ethereum/staking-deposit-cli/releases/download/v2.2.0/staking_deposit-cli-9ab0b05-linux-arm64.tar.gz
-tar -xzf staking_deposit-cli-9ab0b05-linux-arm64.tar.gz
-cd staking_deposit-cli-9ab0b05-linux-arm64/
+wget https://github.com/ethereum/staking-deposit-cli/releases/download/v2.3.0/staking_deposit-cli-76ed782-linux-arm64.tar.gz
+tar -xzf staking_deposit-cli-76ed782-linux-arm64.tar.gz
+cd staking_deposit-cli-76ed782-linux-arm64.tar.gz
 ```
 
 ## Generate Validator key(s)
